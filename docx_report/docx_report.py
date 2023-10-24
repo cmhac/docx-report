@@ -1,11 +1,11 @@
 """Generates a docx report."""
 
-from typing import Optional
 from datetime import datetime
 import os
-import pandas as pd
+from typing import Optional
 import docx
 from docx.enum.text import WD_ALIGN_PARAGRAPH  # pylint: disable=no-name-in-module
+import pandas as pd
 
 
 class DocxReport:
