@@ -14,6 +14,10 @@ python-docx = "^1.0.1"
 pandas = "^2.1.1"
 matplotlib = "^3.8.0"
 pyjanitor = "^0.26.0"
+sphinx-click = "^5.0.1"
+recommonmark = "^0.7.1"
+pydata-sphinx-theme = "^0.14.1"
+sphinx-autodoc-typehints = "^1.24.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.10.1"

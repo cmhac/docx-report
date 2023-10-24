@@ -1,2 +1,4 @@
 [run]
-omit = docx_report/__init__.py
+omit =
+    docx_report/__init__.py
+    docs/*

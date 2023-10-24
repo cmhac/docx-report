@@ -11,15 +11,30 @@ import pandas as pd
 
 
 class DocxReport:
-    """Generates a docx report"""
+    """Generates a docx report.
+
+    Args:
+        title (str): The title of the report.
+
+    Attributes:
+        _doc (docx.Document): The underlying docx document.
+        title (str): The title of the report.
+
+    """
 
     def __init__(self, title: str) -> None:
+        """Initialize the DocxReport object.
+
+        Args:
+            title (str): The title of the report.
+
+        """
         self._doc = docx.Document()
         self.title = title
         self._add_heading()
 
     def _add_heading(self) -> None:
-        """Draws the heading for the report"""
+        """Draws the heading for the report."""
         # add subtitle above the header
         subtitle_p = self._doc.add_paragraph()
         subtitle_p.add_run(
@@ -30,15 +45,32 @@ class DocxReport:
         self._doc.add_heading(self.title, 0)
 
     def add_paragraph(self, text: str) -> None:
-        """Adds a paragraph to the document"""
+        """Adds a paragraph to the document.
+
+        Args:
+            text (str): The text to add as a paragraph.
+
+        """
         return self._doc.add_paragraph(text)
 
     def add_heading(self, text: str, level: int = 1) -> None:
-        """Adds a heading to the document"""
+        """Adds a heading to the document.
+
+        Args:
+            text (str): The text for the heading.
+            level (int): The heading level (default is 1).
+
+        """
         return self._doc.add_heading(text, level)
 
     def add_picture(self, filename: str, width: float = 5) -> None:
-        """Adds a picture to the document"""
+        """Adds a picture to the document.
+
+        Args:
+            filename (str): The path to the image file.
+            width (float): The width of the picture in inches (default is 5).
+
+        """
         return self._doc.add_picture(filename, width=docx.shared.Inches(width))
 
     @staticmethod
@@ -50,18 +82,20 @@ class DocxReport:
         rename_cols: Optional[dict] = None,
         strftime_format: str = "%Y-%m-%d",
     ) -> pd.DataFrame:
-        """Cleans up a dataframe to be ready for plotting
+        """Cleans up a dataframe to be ready for plotting.
 
         Args:
-            df: the dataframe to clean up
-            round_numeric: whether to round numeric columns to 2 decimal places
-            round_decimals: how many decimal places to round to
-            auto_format_dates: whether to automatically format dates
-            rename_cols: a dictionary of columns to rename
-            strftime_format: the format to use when converting dates to strings
+            df (pd.DataFrame): The dataframe to clean up.
+            round_numeric (bool): Whether to round numeric columns to
+                2 decimal places (default is True).
+            round_decimals (int): How many decimal places to round to (default is 1).
+            auto_format_dates (bool): Whether to automatically format dates (default is True).
+            rename_cols (Optional[dict]): A dictionary of columns to rename (default is None).
+            strftime_format (str): The format to use when converting
+                dates to strings (default is "%Y-%m-%d").
 
         Returns:
-            the cleaned up dataframe
+            pd.DataFrame: The cleaned up dataframe.
         """
         # rename the columns
         if rename_cols:
@@ -87,7 +121,7 @@ class DocxReport:
         return df
 
     def _center_last_paragraph(self) -> None:
-        """Centers the last paragraph in the doc"""
+        """Centers the last paragraph in the doc."""
         last_paragraph = self._doc.paragraphs[-1]
         last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
@@ -100,18 +134,15 @@ class DocxReport:
         rename_cols: Optional[dict] = None,
         **kwargs,
     ) -> None:
-        """Uses matplotlib to plot a dataframe, then adds it to the docx file
+        """Uses matplotlib to plot a dataframe, then adds it to the docx file.
 
         Args:
-            df: the dataframe to plot
-            title: the title of the plot
-            x_label: the label for the x axis
-            y_label: the label for the y axis
-            rename_cols: a dictionary of columns to rename
-            **kwargs: keyword arguments to pass to the pandas.DataFrame.plot function
-
-        Returns:
-            None
+            df (pd.DataFrame): The dataframe to plot.
+            title (str): The title of the plot.
+            x_label (str): The label for the x-axis.
+            y_label (str): The label for the y-axis.
+            rename_cols (Optional[dict]): A dictionary of columns to rename (default is None).
+            **kwargs: Keyword arguments to pass to the pandas.DataFrame.plot function.
         """
         df = self._cleanup_dataframe(
             df, round_numeric=False, auto_format_dates=False, rename_cols=rename_cols
@@ -137,16 +168,13 @@ class DocxReport:
         rename_cols: dict = None,
         pct_cols: list = None,
     ) -> None:
-        """Turns a dataframe into a table in the document
+        """Turns a dataframe into a table in the document.
 
         Args:
-            df: the dataframe to turn into a table
-            include_index: whether to include the index as a column
-            rename_cols: a dictionary of columns to rename
-            pct_cols: a list of columns to format as percentages
-
-        Returns:
-            None
+            df (pd.DataFrame): The dataframe to turn into a table.
+            include_index (bool): Whether to include the index as a column (default is True).
+            rename_cols (dict): A dictionary of columns to rename (default is None).
+            pct_cols (list): A list of columns to format as percentages (default is None).
         """
         # if include_index, reset the index so it's a column
         if include_index:
@@ -190,9 +218,19 @@ class DocxReport:
         return df
 
     def add_list_bullet(self, text: str) -> None:
-        """Adds a bullet point to the document"""
+        """Adds a bullet point to the document.
+
+        Args:
+            text (str): The text for the bullet point.
+
+        """
         return self._doc.add_paragraph(text, style="List Bullet")
 
     def save(self, filename: str) -> None:
-        """Saves the docx file"""
+        """Saves the docx file.
+
+        Args:
+            filename (str): The filename to save the document as.
+
+        """
         self._doc.save(filename)
