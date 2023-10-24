@@ -14,20 +14,20 @@ class DocxReport:
     """Generates a docx report."""
 
     def __init__(self, title: str) -> None:
-        self.doc = docx.Document()
+        self._doc = docx.Document()
         self.title = title
         self._add_heading()
 
     def _add_heading(self) -> None:
         """draws the heading for the report"""
         # add subtitle above the header
-        subtitle_p = self.doc.add_paragraph()
+        subtitle_p = self._doc.add_paragraph()
         subtitle_p.add_run(
             f"Generated on {datetime.now().strftime('%B %-d, %-I:%-M %p')}"
         )
         subtitle_p.style = "Subtitle"
         # add the title
-        self.doc.add_heading(self.title, 0)
+        self._doc.add_heading(self.title, 0)
 
     @staticmethod
     def _cleanup_dataframe(
@@ -76,7 +76,7 @@ class DocxReport:
 
     def _center_last_paragraph(self) -> None:
         """centers the last paragraph in the doc"""
-        last_paragraph = self.doc.paragraphs[-1]
+        last_paragraph = self._doc.paragraphs[-1]
         last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     def add_plot(
@@ -112,7 +112,7 @@ class DocxReport:
         # save the plot as a png
         ax.get_figure().savefig("temp.png")
         # add the plot to the docx file
-        self.doc.add_picture("temp.png", width=docx.shared.Inches(5))
+        self._doc.add_picture("temp.png", width=docx.shared.Inches(5))
         # center the image
         self._center_last_paragraph()
         # delete the temp png
@@ -149,7 +149,7 @@ class DocxReport:
         # create the table based on the size of the dataframe
         rows = df.shape[0] + 1  # add 1 for the header
         cols = df.shape[1]
-        table = self.doc.add_table(rows=rows, cols=cols)
+        table = self._doc.add_table(rows=rows, cols=cols)
         # set the style
         table.style = "TableGrid"
 
@@ -179,8 +179,8 @@ class DocxReport:
 
     def add_list_bullet(self, text: str) -> None:
         """adds a bullet point to the document"""
-        return self.doc.add_paragraph(text, style="List Bullet")
+        return self._doc.add_paragraph(text, style="List Bullet")
 
     def save(self, filename: str) -> None:
         """saves the docx file"""
-        self.doc.save(filename)
+        self._doc.save(filename)

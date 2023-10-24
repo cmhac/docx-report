@@ -33,10 +33,9 @@ df = pd.DataFrame(data)
 def test_initialization():
     """Tests the initialization of a DocxReport object."""
     report = DocxReport("Test Report")
-    # raise ValueError(type(report.doc))
-    assert isinstance(report.doc, DocumentBaseClass)
+    assert isinstance(report._doc, DocumentBaseClass)
     assert report.title == "Test Report"
-    assert report.doc.paragraphs[1].text == "Test Report"
+    assert report._doc.paragraphs[1].text == "Test Report"
 
 
 def test_cleanup_dataframe():
@@ -77,8 +76,8 @@ def test_add_table():
     """Tests the add_table method."""
     report = DocxReport("Test Report")
     report.add_table(df)
-    assert report.doc.tables[0].rows[0].cells[0].text == "index"  # header added
-    assert report.doc.tables[0].rows[1].cells[1].text == "2021-01-01"  # Data added
+    assert report._doc.tables[0].rows[0].cells[0].text == "index"  # header added
+    assert report._doc.tables[0].rows[1].cells[1].text == "2021-01-01"  # Data added
 
 
 def doc_table_to_df(table):
@@ -115,7 +114,7 @@ def test_add_list_bullet():
     """Tests the add_list_bullet method."""
     report = DocxReport("Test Report")
     report.add_list_bullet("Test Bullet")
-    assert report.doc.paragraphs[2].text == "Test Bullet"  # Bullet added
+    assert report._doc.paragraphs[2].text == "Test Bullet"  # Bullet added
 
 
 def test_save(tmp_path):
