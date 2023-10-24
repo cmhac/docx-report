@@ -1,3 +1,15 @@
+.. image:: https://codecov.io/gh/christopher-hacker/docx-report/branch/main/graph/badge.svg?token=019MXVQYN5
+    :target: https://codecov.io/gh/christopher-hacker/docx-report
+    :align: left
+
+.. image:: https://github.com/christopher-hacker/docx-report/actions/workflows/test.yaml/badge.svg
+    :target: https://github.com/christopher-hacker/docx-report/actions/workflows/test.yaml
+    :alt: tests
+
+.. image:: https://badge.fury.io/py/docx-report.svg
+    :target: https://badge.fury.io/py/docx-report
+    :alt: PyPI version
+
 docx-report
 ===========
 
