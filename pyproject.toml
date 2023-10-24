@@ -3,7 +3,7 @@ name = "docx-report"
 version = "0.1.0"
 description = "A wrapper for the python-docx library that simplifies creating Word documents in Python"
 authors = ["Chris Hacker <49451910+christopher-hacker@users.noreply.github.com>"]
-readme = "README.md"
+readme = "README.rst"
 packages = [
     { include = "*", from = "docx_report" },
 ]
