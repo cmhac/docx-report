@@ -5,9 +5,20 @@ import os
 from docx.document import Document as DocumentBaseClass
 from docx import Document
 import pandas as pd
+import pytest
 from docx_report import DocxReport
 
 # pylint: disable=protected-access
+
+
+@pytest.fixture
+def cleanup():
+    """Removes the test.docx file after a test"""
+    # 'yield' will return control to the test function and
+    # resume here after the test function completes
+    yield
+    if os.path.exists("test.docx"):
+        os.remove("test.docx")
 
 
 # Sample data for testing
@@ -37,16 +48,13 @@ def test_cleanup_dataframe():
 
 def test_cleanup_dataframe_rename_cols():
     """Tests the _cleanup_dataframe method with rename_cols."""
-    # Given
     initial_data = {"old_col1": [1, 2, 3], "old_col2": [4, 5, 6]}
     rename_dict = {"old_col1": "new_col1", "old_col2": "new_col2"}
     new_df = pd.DataFrame(initial_data)
     report = DocxReport("Test Report")
 
-    # When
     cleaned_df = report._cleanup_dataframe(new_df, rename_cols=rename_dict)
 
-    # Then
     assert list(cleaned_df.columns) == [
         "new col1",
         "new col2",
@@ -70,6 +78,36 @@ def test_add_table():
     report.add_table(df)
     assert report.doc.tables[0].rows[0].cells[0].text == "index"  # header added
     assert report.doc.tables[0].rows[1].cells[1].text == "2021-01-01"  # Data added
+
+
+def doc_table_to_df(table):
+    """Converts a docx table to a pandas DataFrame."""
+    rows_data = []
+    for row in table.rows:
+        row_data = [cell.text for cell in row.cells]
+        rows_data.append(row_data)
+    # Assuming the first row is headers
+    return pd.DataFrame(rows_data[1:], columns=rows_data[0])
+
+
+def test_add_table_pct_cols(
+    cleanup,  # pylint: disable=redefined-outer-name,unused-argument
+):
+    """Tests the add_table method with pct_cols."""
+    initial_data = {"value": [0.1, 0.2, 0.3], "percent": [0.4, 0.5, 0.6]}
+    new_df = pd.DataFrame(initial_data)
+    report = DocxReport("Test Report")
+
+    report.add_table(new_df, pct_cols=["percent"])
+    report.save("test.docx")
+
+    doc = Document("test.docx")
+    table = doc.tables[0]
+    table_df = doc_table_to_df(table)
+    expected_percent_col = ["40.0%", "50.0%", "60.0%"]
+    assert (
+        list(table_df["percent"]) == expected_percent_col
+    ), f"Expected {expected_percent_col}, but got {list(table_df['percent'])}"
 
 
 def test_add_list_bullet():
