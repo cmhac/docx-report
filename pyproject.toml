@@ -19,6 +19,10 @@ black = "^23.10.1"
 pylint = "^3.0.2"
 pytest = "^7.4.2"
 coverage = "^7.3.2"
+pytest-cov = "^4.1.0"
+
+[tool.pytest.ini_options]
+addopts = "--cov=docx_report --cov-report term --cov-report html"
 
 [build-system]
 requires = ["poetry-core"]
