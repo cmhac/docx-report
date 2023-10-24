@@ -7,6 +7,8 @@ from docx import Document
 import pandas as pd
 from docx_report import DocxReport
 
+# pylint: disable=protected-access
+
 
 # Sample data for testing
 data = {
@@ -31,6 +33,24 @@ def test_cleanup_dataframe():
     cleaned_df = report._cleanup_dataframe(df)  # pylint: disable=protected-access
     assert cleaned_df["dates"].dtype == "object"  # Dates converted to strings
     assert cleaned_df["values"][0] == 1.2  # Values rounded to 1 decimal place
+
+
+def test_cleanup_dataframe_rename_cols():
+    """Tests the _cleanup_dataframe method with rename_cols."""
+    # Given
+    initial_data = {"old_col1": [1, 2, 3], "old_col2": [4, 5, 6]}
+    rename_dict = {"old_col1": "new_col1", "old_col2": "new_col2"}
+    df = pd.DataFrame(initial_data)
+    report = DocxReport("Test Report")
+
+    # When
+    cleaned_df = report._cleanup_dataframe(df, rename_cols=rename_dict)
+
+    # Then
+    assert list(cleaned_df.columns) == [
+        "new col1",
+        "new col2",
+    ], f"Expected renamed columns, but got {list(cleaned_df.columns)}"
 
 
 def test_add_plot(tmp_path):
