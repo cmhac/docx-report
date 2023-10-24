@@ -5,6 +5,7 @@ import os
 from typing import Optional
 import docx
 from docx.enum.text import WD_ALIGN_PARAGRAPH  # pylint: disable=no-name-in-module
+import janitor  # pylint: disable=unused-import
 import pandas as pd
 
 
