@@ -40,11 +40,11 @@ def test_cleanup_dataframe_rename_cols():
     # Given
     initial_data = {"old_col1": [1, 2, 3], "old_col2": [4, 5, 6]}
     rename_dict = {"old_col1": "new_col1", "old_col2": "new_col2"}
-    df = pd.DataFrame(initial_data)
+    new_df = pd.DataFrame(initial_data)
     report = DocxReport("Test Report")
 
     # When
-    cleaned_df = report._cleanup_dataframe(df, rename_cols=rename_dict)
+    cleaned_df = report._cleanup_dataframe(new_df, rename_cols=rename_dict)
 
     # Then
     assert list(cleaned_df.columns) == [
