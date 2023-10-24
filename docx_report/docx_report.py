@@ -1,5 +1,6 @@
 """Generates a docx report."""
 
+from typing import Optional
 from datetime import datetime
 import os
 import pandas as pd
@@ -29,10 +30,10 @@ class DocxReport:
     @staticmethod
     def _cleanup_dataframe(
         df: pd.DataFrame,
-        round_numeric=True,
-        round_decimals=2,
-        auto_format_dates=True,
-        rename_cols: dict = None,
+        round_numeric: bool = True,
+        round_decimals: int = 1,
+        auto_format_dates: bool = True,
+        rename_cols: Optional[dict] = None,
         strftime_format: str = "%Y-%m-%d",
     ) -> pd.DataFrame:
         """cleans up a dataframe to be ready for plotting
@@ -82,7 +83,7 @@ class DocxReport:
         title: str,
         x_label: str,
         y_label: str,
-        rename_cols: dict = None,
+        rename_cols: Optional[dict] = None,
         **kwargs,
     ) -> None:
         """uses matplotlib to plot a dataframe, then adds it to the docx file
