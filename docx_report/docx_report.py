@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Generates a docx report."""
+"""Generates a docx report"""
 
 from datetime import datetime
 import os
@@ -11,7 +11,7 @@ import pandas as pd
 
 
 class DocxReport:
-    """Generates a docx report."""
+    """Generates a docx report"""
 
     def __init__(self, title: str) -> None:
         self._doc = docx.Document()
@@ -19,7 +19,7 @@ class DocxReport:
         self._add_heading()
 
     def _add_heading(self) -> None:
-        """draws the heading for the report"""
+        """Draws the heading for the report"""
         # add subtitle above the header
         subtitle_p = self._doc.add_paragraph()
         subtitle_p.add_run(
@@ -30,15 +30,15 @@ class DocxReport:
         self._doc.add_heading(self.title, 0)
 
     def add_paragraph(self, text: str) -> None:
-        """adds a paragraph to the document"""
+        """Adds a paragraph to the document"""
         return self._doc.add_paragraph(text)
 
     def add_heading(self, text: str, level: int = 1) -> None:
-        """adds a heading to the document"""
+        """Adds a heading to the document"""
         return self._doc.add_heading(text, level)
 
     def add_picture(self, filename: str, width: float = 5) -> None:
-        """adds a picture to the document"""
+        """Adds a picture to the document"""
         return self._doc.add_picture(filename, width=docx.shared.Inches(width))
 
     @staticmethod
@@ -50,7 +50,7 @@ class DocxReport:
         rename_cols: Optional[dict] = None,
         strftime_format: str = "%Y-%m-%d",
     ) -> pd.DataFrame:
-        """cleans up a dataframe to be ready for plotting
+        """Cleans up a dataframe to be ready for plotting
 
         Args:
             df: the dataframe to clean up
@@ -87,7 +87,7 @@ class DocxReport:
         return df
 
     def _center_last_paragraph(self) -> None:
-        """centers the last paragraph in the doc"""
+        """Centers the last paragraph in the doc"""
         last_paragraph = self._doc.paragraphs[-1]
         last_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
@@ -100,7 +100,7 @@ class DocxReport:
         rename_cols: Optional[dict] = None,
         **kwargs,
     ) -> None:
-        """uses matplotlib to plot a dataframe, then adds it to the docx file
+        """Uses matplotlib to plot a dataframe, then adds it to the docx file
 
         Args:
             df: the dataframe to plot
@@ -108,7 +108,7 @@ class DocxReport:
             x_label: the label for the x axis
             y_label: the label for the y axis
             rename_cols: a dictionary of columns to rename
-            **kwargs: keyword arguments to pass to the plot function
+            **kwargs: keyword arguments to pass to the pandas.DataFrame.plot function
 
         Returns:
             None
@@ -137,7 +137,7 @@ class DocxReport:
         rename_cols: dict = None,
         pct_cols: list = None,
     ) -> None:
-        """turns a dataframe into a table in the document
+        """Turns a dataframe into a table in the document
 
         Args:
             df: the dataframe to turn into a table
@@ -190,9 +190,9 @@ class DocxReport:
         return df
 
     def add_list_bullet(self, text: str) -> None:
-        """adds a bullet point to the document"""
+        """Adds a bullet point to the document"""
         return self._doc.add_paragraph(text, style="List Bullet")
 
     def save(self, filename: str) -> None:
-        """saves the docx file"""
+        """Saves the docx file"""
         self._doc.save(filename)
