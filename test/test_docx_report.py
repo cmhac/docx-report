@@ -9,7 +9,13 @@ import pandas as pd
 import pytest
 from docx_report import DocxReport
 
-# pylint: disable=protected-access
+# pylint: disable=protected-access,redefined-outer-name
+
+
+@pytest.fixture
+def report():
+    """Returns a DocxReport object"""
+    return DocxReport("Test Report")
 
 
 @pytest.fixture
@@ -30,28 +36,25 @@ data = {
 df = pd.DataFrame(data)
 
 
-def test_initialization():
+def test_initialization(report):
     """Tests the initialization of a DocxReport object."""
-    report = DocxReport("Test Report")
     assert isinstance(report._doc, DocumentBaseClass)
     assert report.title == "Test Report"
     assert report._doc.paragraphs[1].text == "Test Report"
 
 
-def test_cleanup_dataframe():
+def test_cleanup_dataframe(report):
     """Tests the _cleanup_dataframe method."""
-    report = DocxReport("Test Report")
     cleaned_df = report._cleanup_dataframe(df)  # pylint: disable=protected-access
     assert cleaned_df["dates"].dtype == "object"  # Dates converted to strings
     assert cleaned_df["values"][0] == 1.2  # Values rounded to 1 decimal place
 
 
-def test_cleanup_dataframe_rename_cols():
+def test_cleanup_dataframe_rename_cols(report):
     """Tests the _cleanup_dataframe method with rename_cols."""
     initial_data = {"old_col1": [1, 2, 3], "old_col2": [4, 5, 6]}
     rename_dict = {"old_col1": "new_col1", "old_col2": "new_col2"}
     new_df = pd.DataFrame(initial_data)
-    report = DocxReport("Test Report")
 
     cleaned_df = report._cleanup_dataframe(new_df, rename_cols=rename_dict)
 
@@ -61,9 +64,8 @@ def test_cleanup_dataframe_rename_cols():
     ], f"Expected renamed columns, but got {list(cleaned_df.columns)}"
 
 
-def test_add_plot(tmp_path):
+def test_add_plot(tmp_path, report):
     """Tests the add_plot method."""
-    report = DocxReport("Test Report")
     report.add_plot(df, "Test Plot", "X Axis", "Y Axis")
     report.save(tmp_path / "test.docx")
     doc = Document(tmp_path / "test.docx")
@@ -72,9 +74,8 @@ def test_add_plot(tmp_path):
     assert os.path.exists(tmp_path / "temp.png") is False  # Temporary file deleted
 
 
-def test_add_table():
+def test_add_table(report):
     """Tests the add_table method."""
-    report = DocxReport("Test Report")
     report.add_table(df)
     assert report._doc.tables[0].rows[0].cells[0].text == "index"  # header added
     assert report._doc.tables[0].rows[1].cells[1].text == "2021-01-01"  # Data added
@@ -91,12 +92,12 @@ def doc_table_to_df(table):
 
 
 def test_add_table_pct_cols(
-    cleanup,  # pylint: disable=redefined-outer-name,unused-argument
+    cleanup,  # pylint: disable=unused-argument
+    report,
 ):
     """Tests the add_table method with pct_cols."""
     initial_data = {"value": [0.1, 0.2, 0.3], "percent": [0.4, 0.5, 0.6]}
     new_df = pd.DataFrame(initial_data)
-    report = DocxReport("Test Report")
 
     report.add_table(new_df, pct_cols=["percent"])
     report.save("test.docx")
@@ -110,15 +111,13 @@ def test_add_table_pct_cols(
     ), f"Expected {expected_percent_col}, but got {list(table_df['percent'])}"
 
 
-def test_add_list_bullet():
+def test_add_list_bullet(report):
     """Tests the add_list_bullet method."""
-    report = DocxReport("Test Report")
     report.add_list_bullet("Test Bullet")
     assert report._doc.paragraphs[2].text == "Test Bullet"  # Bullet added
 
 
-def test_save(tmp_path):
+def test_save(tmp_path, report):
     """Tests the save method."""
-    report = DocxReport("Test Report")
     report.save(tmp_path / "test.docx")
     assert os.path.exists(tmp_path / "test.docx")  # File saved
