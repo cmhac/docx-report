@@ -29,6 +29,18 @@ class DocxReport:
         # add the title
         self._doc.add_heading(self.title, 0)
 
+    def add_paragraph(self, text: str) -> None:
+        """adds a paragraph to the document"""
+        return self._doc.add_paragraph(text)
+
+    def add_heading(self, text: str, level: int = 1) -> None:
+        """adds a heading to the document"""
+        return self._doc.add_heading(text, level)
+
+    def add_picture(self, filename: str, width: float = 5) -> None:
+        """adds a picture to the document"""
+        return self._doc.add_picture(filename, width=docx.shared.Inches(width))
+
     @staticmethod
     def _cleanup_dataframe(
         df: pd.DataFrame,

@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 from docx.document import Document as DocumentBaseClass
 from docx import Document
+from docx.shared import Inches
 import pandas as pd
 import pytest
 from docx_report import DocxReport
@@ -62,6 +63,31 @@ def test_cleanup_dataframe_rename_cols(report):
         "new col1",
         "new col2",
     ], f"Expected renamed columns, but got {list(cleaned_df.columns)}"
+
+
+def test_add_paragraph(report):
+    """Tests the add_paragraph method."""
+    report.add_paragraph("Test Paragraph")
+
+    paragraph = report._doc.paragraphs[-1]
+    assert paragraph.text == "Test Paragraph"
+
+
+def test_add_heading(report):
+    """Tests the add_heading method."""
+    report.add_heading("Test Heading", level=2)
+
+    paragraph = report._doc.paragraphs[-1]
+    assert paragraph.text == "Test Heading"
+    assert paragraph.style.name == "Heading 2"
+
+
+def test_add_picture(report):
+    """Tests the add_picture method."""
+    report.add_picture("test/test_data/test_image.png", width=6)
+
+    last_shape = report._doc.inline_shapes[-1]
+    assert last_shape.width == Inches(6)
 
 
 def test_add_plot(tmp_path, report):
