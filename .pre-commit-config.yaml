@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: fix-encoding-pragma
+
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: Run pytest with coverage
+        entry: poetry run pytest --cov=docx_report --cov-fail-under=100
+        language: system
+        types: [python]
+        pass_filenames: false
+    -   id: pylint
+        name: Check code with pylint
+        entry: poetry run pylint docx_report --fail-under=10
+        language: system
+        types: [python]
+        pass_filenames: false

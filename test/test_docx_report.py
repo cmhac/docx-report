@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Tests the docx_report module."""
 
 from datetime import datetime

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 docx_report
 ===========

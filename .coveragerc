@@ -1,0 +1,2 @@
+[run]
+omit = docx_report/__init__.py

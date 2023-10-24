@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Generates a docx report."""
 
 from datetime import datetime
