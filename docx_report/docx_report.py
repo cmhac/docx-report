@@ -35,13 +35,17 @@ class DocxReport:
 
     def _add_heading(self) -> None:
         """Draws the heading for the report."""
-        # add subtitle above the header
+        # Get the current time
+        current_time = datetime.now().astimezone()
+
+        # Format the time
+        formatted_time = current_time.strftime("%B %-d, %-I:%M %p %Z")
+
+        # Add subtitle above the header
         subtitle_p = self._doc.add_paragraph()
-        subtitle_p.add_run(
-            f"Generated on {datetime.now().strftime('%B %-d, %-I:%-M %p')}"
-        )
+        subtitle_p.add_run(f"Generated on {formatted_time}")
         subtitle_p.style = "Subtitle"
-        # add the title
+        # Add the title
         self._doc.add_heading(self.title, 0)
 
     def add_paragraph(self, text: str) -> None:
