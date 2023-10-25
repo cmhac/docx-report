@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import os
+import docx
 from docx.document import Document as DocumentBaseClass
 from docx import Document
 from docx.shared import Inches
@@ -76,16 +77,16 @@ def test_cleanup_dataframe_rename_cols(report):
 
 def test_add_paragraph(report):
     """Tests the add_paragraph method."""
-    report.add_paragraph("Test Paragraph")
-
+    return_value = report.add_paragraph("Test Paragraph")
+    assert isinstance(return_value, docx.text.paragraph.Paragraph)
     paragraph = report._doc.paragraphs[-1]
     assert paragraph.text == "Test Paragraph"
 
 
 def test_add_heading(report):
     """Tests the add_heading method."""
-    report.add_heading("Test Heading", level=2)
-
+    return_value = report.add_heading("Test Heading", level=2)
+    assert isinstance(return_value, docx.text.paragraph.Paragraph)
     paragraph = report._doc.paragraphs[-1]
     assert paragraph.text == "Test Heading"
     assert paragraph.style.name == "Heading 2"
@@ -93,24 +94,24 @@ def test_add_heading(report):
 
 def test_add_picture(report):
     """Tests the add_picture method."""
-    report.add_picture("test/test_data/test_image.png", width=6)
-
+    return_value = report.add_picture("test/test_data/test_image.png", width=6)
+    assert isinstance(return_value, docx.shape.InlineShape)
     last_shape = report._doc.inline_shapes[-1]
     assert last_shape.width == Inches(6)
 
 
-def test_add_plot(tmp_path, report):
+def test_add_plot(report):
     """Tests the add_plot method."""
-    report.add_plot(df, "Test Plot", "X Axis", "Y Axis")
-    report.save(tmp_path / "test.docx")
-    doc = Document(tmp_path / "test.docx")
+    return_value = report.add_plot(df, "Test Plot", "X Axis", "Y Axis")
+    assert isinstance(return_value, docx.shape.InlineShape)
     # check that an image was added
-    assert len(doc.inline_shapes) == 1
+    assert len(report._doc.inline_shapes) == 1
 
 
 def test_add_table(report):
     """Tests the add_table method."""
-    report.add_table(df)
+    return_value = report.add_table(df)
+    assert isinstance(return_value, docx.table.Table)
     assert report._doc.tables[0].rows[0].cells[0].text == "index"  # header added
     assert report._doc.tables[0].rows[1].cells[1].text == "2021-01-01"  # Data added
 
@@ -147,7 +148,8 @@ def test_add_table_pct_cols(
 
 def test_add_list_bullet(report):
     """Tests the add_list_bullet method."""
-    report.add_list_bullet("Test Bullet")
+    return_value = report.add_list_bullet("Test Bullet")
+    assert isinstance(return_value, docx.text.paragraph.Paragraph)
     assert report._doc.paragraphs[2].text == "Test Bullet"  # Bullet added
 
 

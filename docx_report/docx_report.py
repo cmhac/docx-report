@@ -50,31 +50,56 @@ class DocxReport:
         # Add the title
         self._doc.add_heading(self.title, 0)
 
-    def add_paragraph(self, text: str) -> docx.text.paragraph.Paragraph:
+    def add_paragraph(
+        self,
+        text: str = "",
+        style: str = None,
+    ) -> docx.text.paragraph.Paragraph:
         """Adds a paragraph to the document.
 
         Args:
             text (str): The text to add as a paragraph.
-        """
-        return self._doc.add_paragraph(text)
+            style (str): The style of the paragraph (default is None).
 
-    def add_heading(self, text: str, level: int = 1) -> docx.text.paragraph.Paragraph:
+        Returns:
+            docx.text.paragraph.Paragraph: The paragraph.
+        """
+        return self._doc.add_paragraph(text=text, style=style)
+
+    def add_heading(
+        self, text: str = "", level: int = 1
+    ) -> docx.text.paragraph.Paragraph:
         """Adds a heading to the document.
 
         Args:
             text (str): The text for the heading.
             level (int): The heading level (default is 1).
-        """
-        return self._doc.add_heading(text, level)
 
-    def add_picture(self, filename: str, width: float = 5) -> docx.shape.InlineShape:
+        Returns:
+            docx.text.paragraph.Paragraph: The heading as a paragraph.
+        """
+        return self._doc.add_heading(text=text, level=level)
+
+    def add_picture(
+        self,
+        image_path_or_stream: str,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+    ) -> docx.shape.InlineShape:
         """Adds a picture to the document.
 
         Args:
-            filename (str): The path to the image file.
+            image_path_or_stream (str): The path to the image file.
             width (float): The width of the picture in inches (default is 5).
+
+        Returns:
+            docx.shape.InlineShape: The picture as an inline shape.
         """
-        return self._doc.add_picture(filename, width=docx.shared.Inches(width))
+        return self._doc.add_picture(
+            image_path_or_stream,
+            width=docx.shared.Inches(width) if width is not None else None,
+            height=docx.shared.Inches(height) if height is not None else None,
+        )
 
     @staticmethod
     def _cleanup_dataframe(
@@ -136,7 +161,7 @@ class DocxReport:
         y_label: str,
         rename_cols: Optional[dict] = None,
         **kwargs,
-    ) -> None:
+    ) -> docx.shape.InlineShape:
         """Uses matplotlib to plot a dataframe, then adds it to the docx file.
 
         Args:
@@ -146,6 +171,9 @@ class DocxReport:
             y_label (str): The label for the y-axis.
             rename_cols (Optional[dict]): A dictionary of columns to rename (default is None).
             **kwargs: Keyword arguments to pass to the pandas.DataFrame.plot function.
+
+        Returns:
+            docx.shape.InlineShape: The plot as an inline shape.
         """
         df = self._cleanup_dataframe(
             df, round_numeric=False, auto_format_dates=False, rename_cols=rename_cols
@@ -159,9 +187,10 @@ class DocxReport:
         with tempfile.NamedTemporaryFile(suffix=".png") as temp_file:
             ax.get_figure().savefig(temp_file.name)
             # add the plot to the docx file
-            self._doc.add_picture(temp_file.name, width=docx.shared.Inches(5))
+            picture = self._doc.add_picture(temp_file.name, width=docx.shared.Inches(5))
             # center the image
             self._center_last_paragraph()
+            return picture
 
     def add_table(
         self,
@@ -169,7 +198,7 @@ class DocxReport:
         include_index: bool = True,
         rename_cols: dict = None,
         pct_cols: list = None,
-    ) -> None:
+    ) -> docx.table.Table:
         """Turns a dataframe into a table in the document.
 
         Args:
@@ -177,6 +206,9 @@ class DocxReport:
             include_index (bool): Whether to include the index as a column (default is True).
             rename_cols (dict): A dictionary of columns to rename (default is None).
             pct_cols (list): A list of columns to format as percentages (default is None).
+
+        Returns:
+            docx.table.Table: A table object containing the data.
         """
         # if include_index, reset the index so it's a column
         if include_index:
@@ -217,9 +249,9 @@ class DocxReport:
                 else:
                     value = str(value)
                 row_cells[value_index].text = value
-        return df
+        return table
 
-    def add_list_bullet(self, text: str) -> None:
+    def add_list_bullet(self, text: str) -> docx.text.paragraph.Paragraph:
         """Adds a bullet point to the document.
 
         Args:
