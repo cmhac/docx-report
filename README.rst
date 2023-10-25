@@ -52,4 +52,13 @@ Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-.. _python-docx: https://python-docx.readthedocs.io/en/latest/
+In order to contribute, you need python 3.10+ and poetry installed. If you have access to Github Codespaces, I strongly recommend creating a codespace for this project. The codespace will automatically install the correct version of python and poetry, create your virtual environment, and will also install the pre-commit hooks.
+
+If you don't have access to Github Codespaces, you can create a virtual environment and install the pre-commit hooks manually using poetry:
+
+.. code-block:: bash
+
+    poetry install
+    poetry run pre-commit install
+
+The pre-commit hooks enforce code formatting and run the tests before allowing you to commit your changes. Those same checks will also run on Github Actions when you open a pull request, and are required to pass before your pull request can be merged.
