@@ -27,7 +27,6 @@ class DocxReport:
 
         Args:
             title (str): The title of the report.
-
         """
         self._doc = docx.Document()
         self.title = title
@@ -48,32 +47,29 @@ class DocxReport:
         # Add the title
         self._doc.add_heading(self.title, 0)
 
-    def add_paragraph(self, text: str) -> None:
+    def add_paragraph(self, text: str) -> docx.text.paragraph.Paragraph:
         """Adds a paragraph to the document.
 
         Args:
             text (str): The text to add as a paragraph.
-
         """
         return self._doc.add_paragraph(text)
 
-    def add_heading(self, text: str, level: int = 1) -> None:
+    def add_heading(self, text: str, level: int = 1) -> docx.text.paragraph.Paragraph:
         """Adds a heading to the document.
 
         Args:
             text (str): The text for the heading.
             level (int): The heading level (default is 1).
-
         """
         return self._doc.add_heading(text, level)
 
-    def add_picture(self, filename: str, width: float = 5) -> None:
+    def add_picture(self, filename: str, width: float = 5) -> docx.shape.InlineShape:
         """Adds a picture to the document.
 
         Args:
             filename (str): The path to the image file.
             width (float): The width of the picture in inches (default is 5).
-
         """
         return self._doc.add_picture(filename, width=docx.shared.Inches(width))
 
@@ -226,7 +222,6 @@ class DocxReport:
 
         Args:
             text (str): The text for the bullet point.
-
         """
         return self._doc.add_paragraph(text, style="List Bullet")
 
@@ -235,6 +230,5 @@ class DocxReport:
 
         Args:
             filename (str): The filename to save the document as.
-
         """
         self._doc.save(filename)
