@@ -37,11 +37,20 @@ data = {
 df = pd.DataFrame(data)
 
 
-def test_initialization(report):
+def test_initialization_with_title(report):
     """Tests the initialization of a DocxReport object."""
     assert isinstance(report._doc, DocumentBaseClass)
     assert report.title == "Test Report"
     assert report._doc.paragraphs[1].text == "Test Report"
+
+
+def test_initialization_without_title():
+    """Tests the initialization of a DocxReport object without a title."""
+    report = DocxReport()
+    assert isinstance(report._doc, DocumentBaseClass)
+    assert report.title is None
+    # should have no paragraphs
+    assert len(report._doc.paragraphs) == 0
 
 
 def test_cleanup_dataframe(report):

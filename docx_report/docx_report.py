@@ -14,7 +14,9 @@ class DocxReport:
     """Generates a docx report.
 
     Args:
-        title (str): The title of the report.
+        title (Optional, str): The title of the report. Defaults to None.
+            If passed, will be added as a heading to the report along with a
+            subtitle containing the time the report was generated.
 
     Attributes:
         _doc (docx.Document): The underlying docx document.
@@ -22,7 +24,7 @@ class DocxReport:
 
     """
 
-    def __init__(self, title: str) -> None:
+    def __init__(self, title: Optional[str] = None) -> None:
         """Initialize the DocxReport object.
 
         Args:
@@ -30,7 +32,8 @@ class DocxReport:
         """
         self._doc = docx.Document()
         self.title = title
-        self._add_title()
+        if self.title is not None:
+            self._add_title()
 
     def _add_title(self) -> None:
         """Draws the heading for the report."""
