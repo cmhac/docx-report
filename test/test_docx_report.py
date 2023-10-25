@@ -73,7 +73,7 @@ def test_add_paragraph(report):
     assert paragraph.text == "Test Paragraph"
 
 
-def test_add_title(report):
+def test_add_heading(report):
     """Tests the add_heading method."""
     report.add_heading("Test Heading", level=2)
 
