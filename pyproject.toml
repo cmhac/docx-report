@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docx-report"
-version = "0.1.2"
+version = "0.1.3"
 description = "A wrapper for the python-docx library that simplifies creating Word documents in Python"
 authors = ["Chris Hacker <49451910+christopher-hacker@users.noreply.github.com>"]
 readme = "README.rst"
