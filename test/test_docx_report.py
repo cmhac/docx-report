@@ -97,7 +97,6 @@ def test_add_plot(tmp_path, report):
     doc = Document(tmp_path / "test.docx")
     # check that an image was added
     assert len(doc.inline_shapes) == 1
-    assert os.path.exists(tmp_path / "temp.png") is False  # Temporary file deleted
 
 
 def test_add_table(report):

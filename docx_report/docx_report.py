@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import os
+import tempfile
 from typing import Optional
 import docx
 from docx.enum.text import WD_ALIGN_PARAGRAPH  # pylint: disable=no-name-in-module
@@ -153,13 +154,14 @@ class DocxReport:
         ax.set_xlabel(x_label)
         ax.set_ylabel(y_label)
         # save the plot as a png
-        ax.get_figure().savefig("temp.png")
+        temp_file = tempfile.NamedTemporaryFile(suffix=".png")
+        ax.get_figure().savefig(temp_file.name)
         # add the plot to the docx file
-        self._doc.add_picture("temp.png", width=docx.shared.Inches(5))
+        self._doc.add_picture(temp_file.name, width=docx.shared.Inches(5))
         # center the image
         self._center_last_paragraph()
         # delete the temp png
-        os.remove("temp.png")
+        os.remove(temp_file.name)
 
     def add_table(
         self,
