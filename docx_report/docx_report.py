@@ -2,7 +2,6 @@
 """Generates a docx report"""
 
 from datetime import datetime
-import os
 import tempfile
 from typing import Optional
 import docx
@@ -31,9 +30,9 @@ class DocxReport:
         """
         self._doc = docx.Document()
         self.title = title
-        self._add_heading()
+        self._add_title()
 
-    def _add_heading(self) -> None:
+    def _add_title(self) -> None:
         """Draws the heading for the report."""
         # Get the current time
         current_time = datetime.now().astimezone()
@@ -154,14 +153,12 @@ class DocxReport:
         ax.set_xlabel(x_label)
         ax.set_ylabel(y_label)
         # save the plot as a png
-        temp_file = tempfile.NamedTemporaryFile(suffix=".png")
-        ax.get_figure().savefig(temp_file.name)
-        # add the plot to the docx file
-        self._doc.add_picture(temp_file.name, width=docx.shared.Inches(5))
-        # center the image
-        self._center_last_paragraph()
-        # delete the temp png
-        os.remove(temp_file.name)
+        with tempfile.NamedTemporaryFile(suffix=".png") as temp_file:
+            ax.get_figure().savefig(temp_file.name)
+            # add the plot to the docx file
+            self._doc.add_picture(temp_file.name, width=docx.shared.Inches(5))
+            # center the image
+            self._center_last_paragraph()
 
     def add_table(
         self,
